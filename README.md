@@ -1,6 +1,7 @@
 # Proyecto-energia-hogar-heidy-
 Este programa permite analizar el consumo eléctrico por hora durante 24 horas en un hogar y evaluar estrategias de ahorro energético. 
-El sistema calcula:
+
+##El sistema calcula:
 
 El consumo total diario.
 La hora pico (mayor consumo).
