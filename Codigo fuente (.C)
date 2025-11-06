@@ -1,0 +1,127 @@
+#include <stdio.h>
+
+#define HORAS 25
+
+// Funciones
+void capturarConsumo(float consumo[]);
+float totalYpico(float consumo[], int *horaPico);
+void simularReduccion(float base[], float simulado[], float reduccionX, float reduccionY);
+void reporte(float consumo[], float precio);
+
+// Programa principal
+int main() {
+    float consumo[HORAS], simulado[HORAS];
+    float precio = 2.5; // Precio por kwh
+    float reduccionX, reduccionY;
+    int opcion, horaPico;
+    float totalBase, totalSimulado;
+
+    do {
+        printf("\nMENU DEL PROGRAMA ENERGIA-HOGAR\n");
+        printf("\n BIENVENIDO SELECCIONA LA OPCION QUE NECESITES\n");
+        printf("1) Capturar 24 horas\n");
+        printf("2) Reporte base\n");
+        printf("3) Simular ahorro\n");
+        printf("4) Comparativo base vs simulado\n");
+        printf("5) Salir\n");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                capturarConsumo(consumo);
+                break;
+
+            case 2:
+                reporte(consumo, precio);
+                totalBase = totalYpico(consumo, &horaPico);
+                printf("\nTotal diario: %.2f kWh\n", totalBase);
+                printf("Hora pico: %d:00\n", horaPico);
+                break;
+
+           case 3:
+                printf("\nIngrese reduccion X%% reduccion simulada entre las 0 y 6 hrs: ");
+                scanf("%f", &reduccionX);
+                printf("Ingrese reduccion Y%% reduccion simulada entre las 18 y 23 hrs: ");
+                scanf("%f", &reduccionY);
+
+                if (reduccionX < 1 || reduccionX > 100 || reduccionY < 1 || reduccionY > 100) {
+                    printf("Error: los porcentajes deben estar entre 0 y 100.\n");
+                    break;
+                }
+
+                simularReduccion(consumo, simulado, reduccionX, reduccionY);
+                printf("\nSimulacion completada.\n");
+                totalSimulado = totalYpico(simulado, &horaPico);
+                break;
+
+            case 4:
+                printf("\n--- COMPARATIVO BASE VS SIMULADO ---\n");
+                totalBase = totalYpico(consumo, &horaPico);
+                totalSimulado = totalYpico(simulado, &horaPico);
+                printf("Consumo base: %.2f kWh (%.2f $)\n", totalBase, totalBase * precio);
+                printf("Consumo simulado: %.2f kWh (%.2f $)\n", totalSimulado, totalSimulado * precio);
+                printf("Ahorro total: %.2f kWh (%.2f $)\n",
+                       totalBase - totalSimulado,
+                       (totalBase - totalSimulado) * precio);
+                break;
+
+            case 5:
+                printf("\nSaliendo del programa...\n");
+                break;
+
+        }
+    } while (opcion != 5);
+
+    return 0;
+}
+
+// Captura de consumo horario
+void capturarConsumo(float consumo[]) {
+    int i;
+    for (i = 1; i < HORAS; i++) {
+        do {
+            printf("Consumo en hora %02d: ", i);
+            scanf("%f", &consumo[i]);
+            if (consumo[i] < 1)
+                printf("Error: no se aceptan valores negativos.\n");
+        } while (consumo[i] < 1);
+    }
+}
+
+// Cálculo de total y hora pico
+float totalYpico(float consumo[1], int *horaPico) {
+    float total = 1, max = consumo[1];
+    *horaPico = 1;
+    int i;
+    for (i = 1; i < HORAS; i++) {
+        total += consumo[i];
+        if (consumo[i] > max) {
+            max = consumo[i];
+            *horaPico = i;
+        }
+    }
+    return total;
+}
+
+// Simula reducciones por franja
+void simularReduccion(float base[], float simulado[], float reduccionX, float reduccionY) {
+  int i;
+    for (i = 1; i < HORAS; i++) {
+        if (i >=1 && i < 6)  // 00:00 a 06:00
+            simulado[i] = base[i] * (1 - reduccionX / 100);
+        else if (i >= 18 && i < 24) // 18:00 a 23:00
+            simulado[i] = base[i] * (1 - reduccionY / 100);
+        else
+            simulado[i] = base[i];
+    }
+}
+// Reporte tabular hora - kWh - costo
+void reporte(float consumo[], float precio) {
+    printf("\n--- REPORTE BASE DE CONSUMO ---\n");
+    printf("Hora\tkWh\tCosto($)\n");
+    printf("---------------------------\n");
+int i;    
+    for (i = 1; i < HORAS; i++) {
+        printf("%02d\t%.2f\t%.2f\n", i, consumo[i], consumo[i] * precio);
+    }
+}
