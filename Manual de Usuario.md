@@ -23,5 +23,16 @@ Archivo fuente:        	energia_hogar.c
 *Compila y ejecuta el programa.
 
     Al momento de ejecutar el programa esto es lo que veras en pantalla 
+Principalmente te aparecera el menu de opciones que puedes realizar, escribiendo el numero de la opcion que desees:
 
 <img width="339" height="163" alt="Menu principal" src="https://github.com/user-attachments/assets/504d939b-3b2e-4bc5-be8c-4e957b3464a5" />
+
+    Opción 1: Capturar 24 horas
+
+Permite ingresar los valores de consumo hora por hora (en kWh).
+
+si ingresas un número negativo, el programa lo rechazará y pedirá que lo vuelvas a ingresar.
+
+ejemplo: 
+
+<img width="264" height="498" alt="Reporte base de consumo" src="https://github.com/user-attachments/assets/7eec0107-892a-4d48-892e-b92c75110fb0" />
